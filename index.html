@@ -8,13 +8,12 @@
     <!-- Embed / Open Graph Metadata for Discord and Social Platforms -->
     <meta property="og:title" content="Mitch Bentz | Pitt-Bradford">
     <meta property="og:description" content="Welcome to my university life page! Connect with me or check out what I'm listening to.">
-    <meta property="og:image" content="https://mitch.huxpmusic.com/WubbzyCANNOTsing-ezgif.com-crop.gif">
+    <meta property="og:image" content="https://mitch.huxpmusic.com/icon.gif">
     <meta property="og:url" content="https://mitch.huxpmusic.com">
     <meta name="theme-color" content="#003594">
 
     <!-- Standard Favicon Links -->
     <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="icon" type="image/gif" href="icon.gif">
 
     <!-- Font Awesome 7.3.1 via jsDelivr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css">
@@ -193,10 +192,82 @@
             color: white;
         }
 
-        /* --- Music Section --- */
-        .music-widget {
+        /* --- Last.fm Widget Styling --- */
+        .lfm-card {
+            background: #003594;
+            color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .lfm-header {
+            border-bottom: 2px solid #FFB81C;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .lfm-title {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .lfm-scrobbles {
+            margin: 5px 0 0 0;
+            font-size: 0.85rem;
+            color: #FFB81C;
+        }
+
+        .lfm-tracks {
+            list-style: none;
+            padding: 0;
+            margin: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .lfm-track-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 40, 115, 0.7);
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .lfm-cover {
+            width: 48px;
+            height: 48px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .lfm-track-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .lfm-track-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .lfm-track-name:hover {
+            color: #FFB81C;
+            text-decoration: underline;
+        }
+
+        .lfm-artist-name {
+            font-size: 0.8rem;
+            color: #d1d1d1;
         }
 
         /* --- Footer --- */
@@ -237,7 +308,7 @@
         
         <!-- Sidebar Profile -->
         <aside class="sidebar">
-            <img src="WubbzyCANNOTsing-ezgif.com-crop.gif" alt="Mitch Bentz" class="profile-pic">
+            <img src="icon.gif" alt="Mitch Bentz" class="profile-pic">
             <h1>Mitch Bentz</h1>
             <div class="subtitle">Studying Early Education<br>Pitt-Bradford</div>
             
@@ -283,24 +354,13 @@
 
             <!-- Music Section -->
             <section class="section-card">
-                <h2 class="section-title">Recently Played</h2>
-                <div class="music-widget">
-                    <div class="lastfm"></div>
-                    
-    <!-- Last.fm Widget Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://melchor629.github.io/Last.fm-Web-Widget/lastSongs.comp.js"></script>
-    <script>
-        $(".lastfm").lastSongs("HuxP", "12cdeaf28971bbc766250057c211ee41")
-            .colorDeFondo(0, 53, 148, 0.9)     /* Pitt Blue background */
-            .colorDeLaCabecera(255, 184, 28, 1) /* Pitt Gold header */
-            .colorDelTitulo(255, 255, 255, 1)   /* White titles */
-            .colorDelArtista(220, 220, 220, 1)  /* Light gray artists */
-            .colorDelAlbum(180, 180, 180, 1)    /* Muted gray albums */
-            .colorDeCancion(0, 40, 115, 0.9)    /* Deep blue track rows */
-            .setWidth(300)
-            .applyStyle();
-    </script>
+                <h2 class="section-title">Now Playing</h2>
+                <div id="lastfm-widget" class="lfm-card">
+                    <div class="lfm-header">
+                        <h3 class="lfm-title">Recent tracks by <span id="lfm-user">HuxP</span></h3>
+                        <p class="lfm-scrobbles"><span id="lfm-count">...</span> scrobbles</p>
+                    </div>
+                    <ul id="lfm-track-list" class="lfm-tracks"></ul>
                 </div>
             </section>
 
@@ -311,5 +371,56 @@
     <footer>
         &copy; 2026 Mitch Bentz / <a href="https://huxpmusic.com" target="_blank" rel="noopener noreferrer">HuxP Music</a>
     </footer>
+
+    <!-- Last.fm Widget Script -->
+    <script>
+        const USERNAME = 'HuxP';
+        const API_KEY = '12cdeaf28971bbc766250057c211ee41';
+        const TRACK_LIMIT = 5;
+
+        async function fetchLastFm() {
+            try {
+                // Fetch User Info for Scrobble Count
+                const userRes = await fetch(
+                    `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${USERNAME}&api_key=${API_KEY}&format=json`
+                );
+                const userData = await userRes.json();
+                if (userData.user) {
+                    document.getElementById('lfm-count').textContent =
+                        parseInt(userData.user.playcount).toLocaleString();
+                }
+
+                // Fetch Recent Tracks
+                const trackRes = await fetch(
+                    `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${USERNAME}&api_key=${API_KEY}&limit=${TRACK_LIMIT}&format=json`
+                );
+                const trackData = await trackRes.json();
+                const tracks = trackData.recenttracks.track;
+
+                const listContainer = document.getElementById('lfm-track-list');
+                listContainer.innerHTML = '';
+
+                tracks.forEach(track => {
+                    const coverUrl = track.image[1]['#text'] || 'https://via.placeholder.com/48';
+                    const isNowPlaying = track['@attr'] && track['@attr'].nowplaying === 'true';
+
+                    const li = document.createElement('li');
+                    li.className = 'lfm-track-item';
+                    li.innerHTML = `
+                        <img class="lfm-cover" src="${coverUrl}" alt="${track.name} cover" />
+                        <div class="lfm-track-info">
+                            <a class="lfm-track-name" href="${track.url}" target="_blank" rel="noopener noreferrer">${track.name}</a>
+                            <span class="lfm-artist-name">${track.artist['#text']}${isNowPlaying ? ' • <em>Now Playing</em>' : ''}</span>
+                        </div>
+                    `;
+                    listContainer.appendChild(li);
+                });
+            } catch (err) {
+                console.error('Error fetching Last.fm data:', err);
+            }
+        }
+
+        fetchLastFm();
+    </script>
 </body>
 </html>
