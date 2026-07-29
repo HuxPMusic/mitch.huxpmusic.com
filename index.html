@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mitch Bentz | Pitt-Bradford</title>
     
-    <!-- Animated Favicon -->
-    <link rel="icon" type="image/gif" href="favicon.gif">
-
     <!-- Font Awesome 7.3.1 via jsDelivr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css">
     
@@ -235,7 +232,7 @@
         
         <!-- Sidebar Profile -->
         <aside class="sidebar">
-            <img src="icon.gif" alt="Mitch Bentz" class="profile-pic">
+            <img src="WubbzyCANNOTsing-ezgif.com-crop.gif" alt="Mitch Bentz" class="profile-pic">
             <h1>Mitch Bentz</h1>
             <div class="subtitle">Studying Early Education<br>Pitt-Bradford</div>
             
@@ -296,5 +293,31 @@
     <footer>
         &copy; 2026 Mitch Bentz / <a href="https://huxpmusic.com" target="_blank" rel="noopener noreferrer">HuxP Music</a>
     </footer>
+
+    <!-- Animated Favicon JavaScript Loop -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.type = 'image/png';
+            link.rel = 'icon';
+            document.head.appendChild(link);
+
+            const img = new Image();
+            img.src = 'favicon.gif';
+            
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 64;
+                canvas.height = 64;
+                const ctx = canvas.getContext('2d');
+
+                setInterval(() => {
+                    ctx.clearRect(0, 0, 64, 64);
+                    ctx.drawImage(img, 0, 0, 64, 64);
+                    link.href = canvas.toDataURL('image/png');
+                }, 120);
+            };
+        });
+    </script>
 </body>
 </html>
