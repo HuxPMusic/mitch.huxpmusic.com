@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mitch Bentz | Pitt-Bradford</title>
     
+    <!-- Embed / Open Graph Metadata for Discord and Social Platforms -->
+    <meta property="og:title" content="Mitch Bentz | Pitt-Bradford">
+    <meta property="og:description" content="Welcome to my university life page! Connect with me or check out what I'm listening to.">
+    <meta property="og:image" content="https://mitch.huxpmusic.com/WubbzyCANNOTsing-ezgif.com-crop.gif">
+    <meta property="og:url" content="https://mitch.huxpmusic.com">
+    <meta name="theme-color" content="#003594">
+
     <!-- Standard Favicon Links -->
     <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/gif" href="icon.gif">
 
     <!-- Font Awesome 7.3.1 via jsDelivr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css">
@@ -186,15 +194,9 @@
         }
 
         /* --- Music Section --- */
-        .music-widget img {
-            max-width: 100%;
-            border-radius: 8px;
-            transition: transform 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-
-        .music-widget img:hover {
-            transform: scale(1.02);
+        .music-widget {
+            display: flex;
+            justify-content: center;
         }
 
         /* --- Footer --- */
@@ -235,7 +237,7 @@
         
         <!-- Sidebar Profile -->
         <aside class="sidebar">
-            <img src="icon.gif" alt="Mitch Bentz" class="profile-pic">
+            <img src="WubbzyCANNOTsing-ezgif.com-crop.gif" alt="Mitch Bentz" class="profile-pic">
             <h1>Mitch Bentz</h1>
             <div class="subtitle">Studying Early Education<br>Pitt-Bradford</div>
             
@@ -283,9 +285,22 @@
             <section class="section-card">
                 <h2 class="section-title">Recently Played</h2>
                 <div class="music-widget">
-                    <a href="https://www.last.fm/user/HuxP" target="_blank" rel="noopener noreferrer">
-                        <img src="https://lastfm-recently-played.vercel.app/api?user=HuxP" height="auto" width="350px" alt="Last.fm recently played widget"/>
-                    </a>
+                    <div class="lastfm"></div>
+                    
+    <!-- Last.fm Widget Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://melchor629.github.io/Last.fm-Web-Widget/lastSongs.comp.js"></script>
+    <script>
+        $(".lastfm").lastSongs("HuxP", "12cdeaf28971bbc766250057c211ee41")
+            .colorDeFondo(0, 53, 148, 0.9)     /* Pitt Blue background */
+            .colorDeLaCabecera(255, 184, 28, 1) /* Pitt Gold header */
+            .colorDelTitulo(255, 255, 255, 1)   /* White titles */
+            .colorDelArtista(220, 220, 220, 1)  /* Light gray artists */
+            .colorDelAlbum(180, 180, 180, 1)    /* Muted gray albums */
+            .colorDeCancion(0, 40, 115, 0.9)    /* Deep blue track rows */
+            .setWidth(300)
+            .applyStyle();
+    </script>
                 </div>
             </section>
 
